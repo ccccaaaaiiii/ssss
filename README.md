@@ -13,3 +13,7 @@ Criar a extensao ssss para Stremio que pesquisa no Twitter, encontra links de vi
 1. README.md
 2. addon.js
 3. package.json
+
+## Fonte inicial
+1. Perfil X confirmado: @monroesheriffny
+2. URL: https://x.com/monroesheriffny
