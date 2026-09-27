@@ -1,0 +1,12 @@
+{
+  "name": "ssss",
+  "version": "1.0.0",
+  "description": "Stremio addon para localizar e reproduzir videos do perfil monroesheriffny",
+  "main": "addon.js",
+  "scripts": {
+    "start": "node addon.js"
+  },
+  "dependencies": {
+    "stremio-addon-sdk": "^1.1.1"
+  }
+}
