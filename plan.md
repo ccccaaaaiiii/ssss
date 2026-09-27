@@ -1,20 +1,20 @@
 # plan
 
 ## objetivo
-Criar a extensao ssss para Stremio.
-A extensao deve encontrar uma postagem do perfil monroesheriffny.
-Depois deve extrair o link publico do Google Drive.
-Por fim deve reproduzir o video no addon.
+1. Ler o repo e confirmar a base do addon.
+2. Automatizar a descoberta da postagem.
+3. Extrair o link do Google Drive.
+4. Documentar o metodo de extracao.
 
 ## base confirmada
-Perfil confirmado  monroesheriffny
-Arquivo confirmado  NATURAL MCSO 2018 mp4
-As URLs exatas estao no README.md
+1. O addon inicial ja sobe.
+2. O manifest responde em localhost.
+3. O stream de teste responde para mcso2018.
 
 ## primeira etapa
-1. Encontrar a postagem correta.
+1. Partir da postagem confirmada.
 2. Extrair o link do Google Drive.
-3. Documentar o metodo de extracao.
+3. Validar o stream final.
 
 ## trabalho em paralelo
 1. Eu sigo na branch principal.

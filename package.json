@@ -1,0 +1,13 @@
+{
+  "name": "ssss",
+  "version": "0.0.1",
+  "private": true,
+  "description": "proof of concept stremio addon for one confirmed drive source",
+  "main": "addon.js",
+  "scripts": {
+    "start": "node addon.js"
+  },
+  "dependencies": {
+    "stremio-addon-sdk": "latest"
+  }
+}
