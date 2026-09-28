@@ -18,6 +18,7 @@ import { startServer } from '../src/node-server.js';
 import { startMockDrive, buildMedia, MEDIA_SIZE } from './mock-drive.js';
 import { parseWall, extractFileId, filenameFromDisposition } from '../src/gdrive.js';
 import { extractUrls, extractTweetBlocks } from '../src/xscan.js';
+import { base64urlEncode } from '../src/util.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -320,6 +321,26 @@ async function main() {
       }
     } catch (err) {
       console.log(`    ⚠️ LIVE pulado (${err.message}) — não fatal, mocks cobriram a lógica`);
+    }
+
+    // -----------------------------------------------------------------
+    t('[17] LIVE player — samplelib via proxy (★ shim contra origin real que ignora Range)');
+    try {
+      // Link de teste canônico (master): https://samplelib.com/mp4/sample-5s.mp4
+      // O samplelib responde 200 + arquivo inteiro MESMO com Range — o shim deve
+      // sintetizar o 206 exatamente como faria com o "link curto" do Drive.
+      const target = 'https://samplelib.com/mp4/sample-5s.mp4';
+      const b64 = base64urlEncode(target);
+      const r = await getRange(`${base}/proxy/${b64}`, 'bytes=0-1024');
+      if (r.status === 206 && (r.headers.get('content-type') || '').includes('video')) {
+        assert.match(r.headers.get('content-range') || '', /^bytes 0-1024\/\d+$/, 'content-range sintetizado');
+        assert.equal(r.body.length, 1025);
+        ok(`LIVE: samplelib 200-ignorando-Range → shim devolveu 206 · ${r.headers.get('content-range')}`);
+      } else {
+        console.log(`    ⚠️ LIVE samplelib: resposta inesperada (${r.status}) — não fatal, mocks cobriram a lógica`);
+      }
+    } catch (err) {
+      console.log(`    ⚠️ LIVE samplelib pulado (${err.message}) — não fatal, mocks cobriram a lógica`);
     }
 
     console.log('\n==================================================');

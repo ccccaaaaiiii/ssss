@@ -19,6 +19,7 @@ const PROXY_ALLOWED_HOSTS = [
   /\.googleusercontent\.com$/i,
   /^video\.google\.com$/i,
   /^lh3\.googleusercontent\.com$/i,
+  /(^|\.)samplelib\.com$/i,
 ];
 
 function landingPage(base) {

@@ -124,12 +124,14 @@ O `test/e2e.test.js` valida **todo o ciclo Stremio** e **simula o player** com `
 | 11 | Resolvedor (fixture do muro real capturado hoje) | `uuid`/`confirm`/filename extraídos |
 | 12 | Parser do X (fixture) | links do Drive + t.co extraídos |
 | 13 | **Live** (informativo, não fatal) | 1 chamada ao ID de teste sancionado; 0 toques no arquivo oficial |
+| 14 | **Live player — samplelib via proxy** | origin real que ignora `Range` → shim devolve `206` |
 
 **Regra de cota respeitada:** o arquivo oficial `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` **não** é usado nos
 testes de rotina; o caminho determinístico usa **mock do Drive** que replica fielmente os headers reais
 capturados (incluindo os “headers letais”), e o live usa apenas o ID descartável `0ByeS4oOUV-49Zzh4R1J6R09zazQ`.
-Player de referência do PRD: Big Buck Bunny (`commondatastorage.googleapis.com`) — tentado em modo
-best-effort (o sandbox bloqueia esse host com 403; em produção funciona).
+Player de referência do PRD (decisão do usuário, `master`): **samplelib 5s** — `https://samplelib.com/mp4/sample-5s.mp4`.
+Ele **ignora `Range`** (responde `200` cheio), o que o torna o melhor teste real do shim: através do
+proxy do addon o player recebe `206` + `Content-Range` corretos.
 
 ---
 
