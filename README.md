@@ -15,7 +15,7 @@ Usar esse fluxo como prova inicial antes de automatizar o addon do Stremio.
 Perfil X confirmado: https://x.com/monroesheriffny
 Postagem base confirmada: https://x.com/monroesheriffny/status/1078703782916227072
 Arquivo confirmado no Google Drive: NATURAL (MCSO 2018).mp4
-URL confirmada do Google Drive: https://drive.google.com/file/d/1D8zEdsjKLe2zqSZYCjksy8ppfYMVkk3z/view
+URL confirmada do Google Drive: https://drive.google.com/file/d/1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z/view
 
 4. Importante sobre estes dados
 Esses links servem como base de construcao e validacao.
