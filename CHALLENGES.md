@@ -1,81 +1,49 @@
 # CHALLENGES — ssss Stremio Addon (Serverless)
 
-Registro técnico dos desafios encontrados e soluções projetadas para o desenvolvimento do addon.
-Este documento serve como referência técnica para os agentes implementando nas suas respectivas branches.
+Registro técnico dos desafios e soluções de referência para os agentes de desenvolvimento.
 
 ---
 
-## DESAFIO 1 — Stream de Vídeo do Google Drive em Ambiente Serverless
+## DESAFIO 1 — Stream do Google Drive em Serverless
 
-### ❌ Abordagens Inválidas (Descartadas)
-- **Proxy local em Python (`localhost:8080`):** Incompatível com o modelo de implantação Serverless/Worker e inviável para usuários de Smart TVs (Tizen, LG webOS, Android TV) que não possuem capacidade de rodar scripts locais.
-- **URL direta `/uc?id=ID&export=download`:** Força o cabeçalho `Content-Disposition: attachment`, fazendo o navegador ou TV tentar baixar o arquivo ou abortar em vez de tocar.
-- **Requisição direta sem confirmação em arquivos grandes (>100MB):** O Google Drive retorna uma página HTML de aviso de vírus ("Google Drive can't scan this file for viruses").
-
-### ✅ Solução Serverless em JavaScript
-Fluxo executado diretamente no backend serverless (Node.js / Cloudflare Worker):
-1. **Passo 1 (Descoberta do UUID):**
-   Realizar `fetch` na URL:
-   `https://drive.usercontent.google.com/download?id=${FILE_ID}&export=download`
-2. **Passo 2 (Extração do Token):**
-   Extrair o campo `uuid` (ou token de confirmação `confirm=...`) do corpo HTML retornado via regex:
+### ✅ Solução em JavaScript (Fetch)
+1. **Descoberta do UUID:**
+   GET em `https://drive.usercontent.google.com/download?id=${FILE_ID}&export=download`
+2. **Extração do Token:**
    ```javascript
    const uuidMatch = html.match(/name="uuid"\s+value="([^"]+)"/i) || html.match(/uuid=([a-zA-Z0-9_-]+)/i);
    ```
-3. **Passo 3 (URL Direta de Stream):**
-   Construir a URL direta:
+3. **URL Direta de Stream:**
    `https://drive.usercontent.google.com/download?id=${FILE_ID}&export=download&confirm=t&uuid=${uuid}`
-4. **Passo 4 (Entrega ao Stremio):**
-   - Retornar a URL direta no handler de `stream` do Stremio; ou
-   - Prover uma rota serverless HTTP no próprio addon que faz o `fetch` repassando os cabeçalhos `Range` e definindo `Content-Type: video/mp4` sem `Content-Disposition`.
+4. **Entrega:** Retornar a URL resolvida ou repassar os cabeçalhos `Range` com `Content-Type: video/mp4`.
 
 ---
 
-## DESAFIO 2 — Cota de Download do Google Drive e Ambiente de Testes
+## DESAFIO 2 — Cota de Download e Ambiente de Testes
 
-- **Problema:** O Google Drive impõe limites estritos de taxa e largura de banda para downloads de arquivos públicos (*"Download quota exceeded for this file"* / erro 403/429).
-- **Risco:** Realizar requisições automáticas e repetidas ao arquivo oficial de ~992 MB durante o desenvolvimento/testes travará o link de validação do usuário.
-- **Regra Obrigatória para Agentes e Desenvolvedores:**
-  - **NÃO usar o ID do MCSO 2018 para loops de testes ou requisições contínuas.**
-  - Usar dados mockados para testes unitários do resolvedor de links.
-  - Usar URLs de vídeos públicos abertos para testes de reprodução de mídia:
-    - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
-    - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4`
-    - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4`
-  - A validação com o link oficial deve ser feita apenas uma vez na checagem final.
+- **Problema:** O Google Drive possui limite estrito de cota de download por arquivo público (*"Download quota exceeded"*).
+- **Regra para Testes:**
+  - **Testes com Google Drive:** Devem ser feitos utilizando **outros links/IDs secundários descartáveis do Google Drive**.
+  - **Proibido em rotinas diárias:** Não realizar requisições contínuas com o arquivo oficial (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`).
+  - **Teste de Player:** Usar a URL do Big Buck Bunny: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`.
+  - **Validação Oficial:** Apenas 1 checagem final antes da entrega com o arquivo de produção.
 
 ---
 
-## DESAFIO 3 — Correção do ID do Google Drive de Teste
+## DESAFIO 3 — ID do Google Drive de Referência
 
-- **Problema:** A URL inicial possuía um erro de maiúscula/minúscula no ID (`1D8zEdsjKLe2zqSZYCjksy8ppfYMVkk3z`).
-- **Correção Confirmada:** O ID canônico extraído da postagem original do Twitter/X é:
-  `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` (*"k" minúsculo no 9º caractere*).
+- **ID Canônico:** `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` (*"k" minúsculo no 9º caractere*).
 
 ---
 
-## DESAFIO 4 — Varredura do Perfil X (Twitter) sem Chaves de API
+## DESAFIO 4 — Scraping do X sem Chaves de API
 
-- **Objetivo:** Coletar postagens públicas do perfil `@monroesheriffny` sem exigir credenciais pagas ou tokens do usuário.
-- **Estratégia Serverless (JS Fetch):**
-  - Utilizar endpoints públicos de syndication (ex: `https://syndication.twitter.com/srv/timeline-profile/screen-name/monroesheriffny`).
-  - Extrair links encurtados `https://t.co/XXXXX`.
-  - Resolver os redirects de `t.co` via chamadas HTTP `HEAD`/`GET` capturando o header `Location`.
-  - Filtrar URLs com o padrão `drive.google.com/file/d/{ID}`.
+- Endpoint público: `https://syndication.twitter.com/srv/timeline-profile/screen-name/monroesheriffny`
+- Captura de `t.co` e resolução do `Location` redirecionando para `drive.google.com/file/d/{ID}`.
 
 ---
 
-## DESAFIO 5 — Catálogo e Metadados Dinâmicos no Stremio
+## DESAFIO 5 — Compatibilidade Serverless
 
-- **Objetivo:** Disponibilizar os vídeos encontrados de forma limpa na interface do Stremio.
-- **Implementação:**
-  - `catalogHandler`: Lista os vídeos disponíveis com pôster, título e ID exclusivo (`mcso_natural_2018` ou `drive_{ID}`).
-  - `metaHandler`: Fornece a descrição, ano, gênero e link da postagem original de referência.
-  - `streamHandler`: Executa a resolução do link direto do Google Drive (Desafio 1) e retorna o stream.
-
----
-
-## DESAFIO 6 — Empacotamento e Execução Serverless
-
-- O código em cada branch de agente (`gem`, `son`, `grok`, etc.) deve ser 100% JavaScript (ou TS compilado) utilizando `stremio-addon-sdk` ou manipulação direta de rotas HTTP para Serverless/Edge.
-- O addon deve iniciar com `npm start` ou ser facilmente empacotável para deploy em Cloudflare Workers / Vercel.
+- Código 100% JavaScript executável em Cloudflare Workers / Vercel / Edge.
+- Compatibilidade nativa com apps Stremio em Smart TVs (Android TV, Tizen, webOS).
