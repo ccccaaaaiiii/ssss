@@ -1,36 +1,42 @@
-# ssss
+# ssss — Stremio Addon (Serverless)
 
-Extensao do Stremio para localizar uma postagem no perfil X monroesheriffny, extrair um link publico de video no Google Drive e usar esse fluxo como base do addon.
+Extensão do Stremio para localizar postagens no perfil X (Twitter) @monroesheriffny, extrair links públicos de vídeos no Google Drive e disponibilizá-los diretamente como catálogo e streaming no Stremio.
 
-1. Objetivo deste repositorio
-Este repositorio e a fonte principal de contexto para qualquer agente futuro.
-Quem abrir apenas este arquivo deve entender o problema, o estado atual e o proximo passo.
+---
 
-2. Escopo atual
-Encontrar uma postagem especifica no perfil X monroesheriffny.
-Extrair da postagem um link publico de video no Google Drive.
-Usar esse fluxo como prova inicial antes de automatizar o addon do Stremio.
+## 1. Objetivo do Repositório
+Este repositório (`master`) é a **fonte canônica de documentação, requisitos e desafios técnicos** do projeto. 
+Qualquer agente ou desenvolvedor deve encontrar aqui todo o contexto necessário para implementar sua própria versão nas branches designadas.
 
-3. Fontes confirmadas
-Perfil X confirmado: https://x.com/monroesheriffny
-Postagem base confirmada: https://x.com/monroesheriffny/status/1078703782916227072
-Arquivo confirmado no Google Drive: NATURAL (MCSO 2018).mp4
-URL confirmada do Google Drive: https://drive.google.com/file/d/1D8zEdsjKLe2zqSZYCjksy8ppfYMVkk3z/view
+---
 
-4. Importante sobre estes dados
-Esses links servem como base de construcao e validacao.
-Nao assumir que representam o produto final nem o conjunto completo de fontes.
+## 2. Restrições e Premissas Fundamentais
 
-5. Estado atual
-Repositorio publicado em https://agentgit.co/ssss.git
-README atualizado com a fonte e o exemplo confirmado.
-Primeiro objetivo tecnico validado: identificar a postagem correta e extrair o link do Google Drive.
+> ⚠️ **ATENÇÃO — ARQUITETURA SERVERLESS & SUPORTE A SMART TVs:**
+> - **Zero Dependências Locais:** O addon **NÃO** pode depender de daemons locais, scripts em Python ou servidores rodando em `localhost`.
+> - **Compatibilidade com Smart TVs:** O Stremio é executado em Smart TVs (Samsung Tizen, LG webOS, Android TV), TV Boxes e dispositivos móveis que **não** possuem terminal nem capacidade de executar scripts auxiliares.
+> - **100% Serverless / Cloud Ready:** Toda a lógica (scraping, manifesto, catálogo e resolução/streaming de vídeo) deve ser implementada em **JavaScript / TypeScript puro** compatível com ambientes Serverless (ex: Cloudflare Workers, Vercel, Node.js edge/cloud functions).
 
-6. Proximo passo imediato
-Transformar a descoberta manual da postagem em um processo reproduzivel.
-Depois extrair o link do Google Drive de forma confiavel para uso no addon.
+---
 
-7. Arquivos esperados em seguida
-README.md
-addon.js
-package.json
+## 3. Fontes e Dados Confirmados de Referência
+- **Perfil X confirmado:** [https://x.com/monroesheriffny](https://x.com/monroesheriffny)
+- **Postagem base confirmada:** [https://x.com/monroesheriffny/status/1078703782916227072](https://x.com/monroesheriffny/status/1078703782916227072)
+- **Arquivo confirmado no Google Drive:** `NATURAL (MCSO 2018).mp4` (Tamanho: ~992 MB)
+- **ID correto do Google Drive:** `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` (*atenção: "k" minúsculo no índice 9*)
+- **URL confirmada:** `https://drive.google.com/file/d/1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z/view`
+
+---
+
+## 4. Estrutura de Branches do Projeto
+- **`master`:** Documentação oficial do projeto (`README.md`, `PRD.md`, `CHALLENGES.md`, `plan.md`).
+- **Branches de Implementação dos Agentes:**
+  - `gem37f` (ou branches com prefixo `gem`) — Implementação dos agentes Gemini
+  - `son46l` — Implementação dos agentes Sonnet
+  - `grokb46` — Implementação dos agentes Grok
+  - `kilo-agent` — Implementação do agente Kilo
+
+---
+
+## 5. Próximos Passos Técnicos
+Consulte o [PRD.md](./PRD.md) para a arquitetura completa e o [CHALLENGES.md](./CHALLENGES.md) para o guia detalhado dos desafios e soluções compatíveis com Serverless.
