@@ -1,0 +1,13 @@
+# Instruções operacionais para todos os agentes
+# REGRA CRÍTICA: nunca conclua uma tarefa sem commit e push.
+commit_and_push:
+  mandatory: true
+  steps:
+    - git status
+    - git diff
+    - git add <arquivos>
+    - git commit -m "<descrição>"
+    - git push origin <sua-branch>
+  final_response: informar o hash do commit e confirmar o push
+  on_push_failure: relatar o erro e não declarar a tarefa concluída
+branch_policy: cada agente deve usar sua própria branch; não alterar master sem autorização
