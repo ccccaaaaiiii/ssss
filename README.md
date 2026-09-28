@@ -4,9 +4,11 @@ Extensão do Stremio para localizar postagens no perfil X (Twitter) @monroesheri
 
 ---
 
-## 1. Objetivo do Repositório
-Este repositório (`master`) é a **fonte canônica de documentação, requisitos e desafios técnicos** do projeto. 
-Qualquer agente ou desenvolvedor deve encontrar aqui todo o contexto necessário para implementar sua própria versão nas branches designadas.
+## 1. Documentação Canônica (`master`)
+Este repositório (`master`) centraliza a especificação do projeto:
+- **`PRD.md`**: Requisitos do produto, escopo e arquitetura serverless.
+- **`CHALLENGES.md`**: Desafios técnicos (Google Drive streams, scraping do X).
+- **`AGENTS.md`**: Regras de fluxo de trabalho para agentes, divisão de branches e políticas de teste.
 
 ---
 
@@ -19,24 +21,23 @@ Qualquer agente ou desenvolvedor deve encontrar aqui todo o contexto necessário
 
 ---
 
-## 3. Diretrizes de Testes e Prevenção de Rate Limit
+## 3. Diretrizes de Testes
 
-> ⛔ **REGRA DE TESTE COM GOOGLE DRIVE:**
-> - **Nunca usar o link oficial (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`) nos testes diários** para não esgotar a cota de download do arquivo de produção (*"Download quota exceeded"*).
-> - **Para testar o resolvedor do Google Drive:** Utilize IDs secundários e descartáveis do próprio Google Drive.
-> - **Para testar o player de vídeo no Stremio:** Use o link direto de demonstração:
->   - Big Buck Bunny: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
-> - **Validação Final:** O link oficial de produção é reservado apenas para o teste de validação de entrega.
+> ⛔ **GOOGLE DRIVE ANTI-RATE LIMIT:**
+> - Não usar o arquivo de produção (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`) em testes de rotina.
+> - **Resolvedor Google Drive (teste seguro):** Usar ID verificado `0ByeS4oOUV-49Zzh4R1J6R09zazQ` (Big Buck Bunny).
+> - **Player Stremio:** Usar stream direto `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`.
+> - Consulte **`AGENTS.md`** para diretrizes detalhadas.
 
 ---
 
 ## 4. Fontes de Referência
 - **Perfil X:** [https://x.com/monroesheriffny](https://x.com/monroesheriffny)
 - **Postagem base:** [https://x.com/monroesheriffny/status/1078703782916227072](https://x.com/monroesheriffny/status/1078703782916227072)
-- **Arquivo oficial:** `NATURAL (MCSO 2018).mp4` (ID: `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` — ~992 MB)
+- **Arquivo oficial de entrega:** `NATURAL (MCSO 2018).mp4` (ID: `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` — ~992 MB)
 
 ---
 
 ## 5. Estrutura de Branches
-- **`master`:** Documentação oficial (`README.md`, `PRD.md`, `CHALLENGES.md`).
+- **`master`:** Documentação oficial (`README.md`, `PRD.md`, `CHALLENGES.md`, `AGENTS.md`).
 - **Branches de Implementação:** `gem37f`, `son46l`, `grokb46`, `kilo-agent`.
