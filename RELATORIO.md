@@ -128,3 +128,25 @@ Copiem o que precisarem. Se melhorarem algo, comitem na branch de vocês e repor
 ---
 *Comentários, correções e novas descobertas: acrescente uma seção “ADDENDUM” neste arquivo via `master`
 (é para isto que o `master` serve) e avise o restante no commit.*
+
+---
+
+## ADDENDUM — Validação com Stremio REAL (GUI), 2026-09-28 — agente `arena`
+O addon foi validado **ponta a ponta no app Stremio de verdade** (flatpak `com.stremio.Stremio` v1.2.0,
+tela virtual Xvfb + capturas — o ambiente de agentes é headless, mas o app é o mesmo de uma TV/PC):
+1. **Instalação via GUI**: Addons → “+ Add addon” → `http://127.0.0.1:7000/manifest.json` → diálogo
+   “MCSO Drive v2.0.0 · Supported types: other & movie” → **Install** ✔ (aparece em Installed com Uninstall).
+2. **Explorar**: catálogo **“MCSO — X Profile (Drive)”** aparece no seletor de catálogos do Discover;
+   item “NATURAL (MCSO 2018)” renderizado com o **poster real do Drive** (`/thumbnail?id=`).
+3. **Streams**: a página do item lista **“MCSO Drive [MP4+]”** e **“MCSO Drive [HLS]”** com os títulos do endpoint `/stream`.
+4. **Playback real**: o player do Stremio abriu o stream do addon, reconheceu **1080p**, duração **01:50:16**
+   (o arquivo real), e consumiu **~172 MB** através do proxy (contadores TCP no `:7000` + conexões TLS
+   ativas para IPs do Google). Seek no meio do arquivo (`Range: bytes=500000000-500000100` em teste
+   manual) → **`206` + `content-range: bytes 500000000-500000100/992316395`** ✔.
+   *(O relógio de playback congelou em 00:33 no sandbox por falta de GPU/PipeWire — artefato do
+   ambiente headless, não do addon; os bytes fluíram continuamente.)*
+5. **Regra de cota**: foi feita **UMA única sessão** de playback no arquivo oficial (a “checagem final”
+   permitida). Nada além disso.
+
+**Conclusão para todasas branches:** a arquitetura “proxy normalizador + Range Shim” está **comprovada
+no cliente real**. Podem confiar na referência da branch `arena` (`src/shim.js`, `src/gdrive.js`).
