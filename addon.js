@@ -1,8 +1,8 @@
 const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
+const { resolveGoogleDriveStream } = require('./lib/gdrive');
 
-// ID e URL direta de reprodução do arquivo confirmado no Google Drive
-const GOOGLE_DRIVE_FILE_ID = '1D8zEdsjKLe2zqSZYCjksy8ppfYMVkk3z';
-const DIRECT_STREAM_URL = `https://drive.google.com/uc?export=download&id=${GOOGLE_DRIVE_FILE_ID}`;
+// ID oficial de produção do arquivo confirmado no Google Drive
+const OFFICIAL_FILE_ID = '1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z';
 
 // Manifesto do Addon Stremio
 const manifest = {
@@ -15,26 +15,42 @@ const manifest = {
     idPrefixes: ['mcso_'],
     catalogs: [
         {
-            type: 'other',
+            type: 'movie',
             id: 'mcso_catalog',
             name: 'Monroe County Sheriff NY'
+        },
+        {
+            type: 'other',
+            id: 'mcso_catalog_other',
+            name: 'Monroe County Sheriff NY (Outros)'
         }
     ]
 };
 
 const builder = new addonBuilder(manifest);
 
+// Dados do vídeo
+const VIDEO_ITEM = {
+    id: 'mcso_natural_2018',
+    type: 'movie',
+    name: 'NATURAL (MCSO 2018)',
+    poster: 'https://pbs.twimg.com/profile_images/1582046467006840833/2tQYg8jV_400x400.jpg',
+    background: 'https://pbs.twimg.com/profile_images/1582046467006840833/2tQYg8jV_400x400.jpg',
+    description: 'Vídeo oficial MCSO 2018 - Natural. Extraído da postagem no perfil @monroesheriffny no X.',
+    genres: ['Documentary', 'Community']
+};
+
 // Handler do Catálogo
 builder.defineCatalogHandler(({ type, id }) => {
-    if (type === 'other' && id === 'mcso_catalog') {
+    if (id === 'mcso_catalog' || id === 'mcso_catalog_other') {
         return Promise.resolve({
             metas: [
                 {
-                    id: 'mcso_natural_2018',
-                    type: 'other',
-                    name: 'NATURAL (MCSO 2018)',
-                    poster: 'https://pbs.twimg.com/profile_images/1582046467006840833/2tQYg8jV_400x400.jpg',
-                    description: 'Vídeo NATURAL (MCSO 2018) localizado na postagem do perfil @monroesheriffny no X.'
+                    id: VIDEO_ITEM.id,
+                    type: type,
+                    name: VIDEO_ITEM.name,
+                    poster: VIDEO_ITEM.poster,
+                    description: VIDEO_ITEM.description
                 }
             ]
         });
@@ -47,12 +63,8 @@ builder.defineMetaHandler(({ type, id }) => {
     if (id === 'mcso_natural_2018') {
         return Promise.resolve({
             meta: {
-                id: 'mcso_natural_2018',
-                type: 'other',
-                name: 'NATURAL (MCSO 2018)',
-                genres: ['Documentary', 'Community'],
-                poster: 'https://pbs.twimg.com/profile_images/1582046467006840833/2tQYg8jV_400x400.jpg',
-                description: 'Postagem base: https://x.com/monroesheriffny/status/1078703782916227072\nArquivo Drive: NATURAL (MCSO 2018).mp4\nID: 1D8zEdsjKLe2zqSZYCjksy8ppfYMVkk3z'
+                ...VIDEO_ITEM,
+                type: type || 'movie'
             }
         });
     }
@@ -60,19 +72,25 @@ builder.defineMetaHandler(({ type, id }) => {
 });
 
 // Handler do Stream de Vídeo
-builder.defineStreamHandler(({ type, id }) => {
+builder.defineStreamHandler(async ({ type, id }) => {
     if (id === 'mcso_natural_2018') {
-        return Promise.resolve({
-            streams: [
-                {
-                    name: 'Google Drive',
-                    title: 'NATURAL (MCSO 2018).mp4 - 1080p/720p',
-                    url: DIRECT_STREAM_URL
-                }
-            ]
-        });
+        try {
+            const streamUrl = await resolveGoogleDriveStream(OFFICIAL_FILE_ID);
+            return {
+                streams: [
+                    {
+                        name: 'Google Drive HD',
+                        title: 'NATURAL (MCSO 2018) - 1080p MP4 (Direto)',
+                        url: streamUrl
+                    }
+                ]
+            };
+        } catch (err) {
+            console.error('Erro ao resolver stream do Google Drive:', err);
+            return { streams: [] };
+        }
     }
-    return Promise.resolve({ streams: [] });
+    return { streams: [] };
 });
 
 module.exports = builder.getInterface();
