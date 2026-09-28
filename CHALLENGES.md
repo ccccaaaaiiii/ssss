@@ -25,7 +25,9 @@ Registro técnico dos desafios e soluções de referência para os agentes de de
 - **Regra para Testes:**
   - **Testes com Google Drive:** Devem ser feitos utilizando **outros links/IDs secundários descartáveis do Google Drive**.
   - **Proibido em rotinas diárias:** Não realizar requisições contínuas com o arquivo oficial (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`).
-  - **Teste de Player:** Usar a URL do Big Buck Bunny: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`.
+  - **Teste de Player:** Usar o clipe curto do samplelib (5s, ~2,8 MB, MP4/H.264): `https://samplelib.com/mp4/sample-5s.mp4`.
+    - O host de download `https://download.samplelib.com/mp4/sample-5s.mp4` apenas redireciona (301) para a URL acima — use a URL final direta.
+    - ⚠️ **Observação importante:** o samplelib **ignora requisições `Range`** (responde `200` + arquivo inteiro, sem `Accept-Ranges`). Isso o torna o caso de teste real perfeito para o *Range Shim* do proxy: testando a URL de stream **do addon**, o player recebe `206` + `Content-Range` normalizados.
   - **Validação Oficial:** Apenas 1 checagem final antes da entrega com o arquivo de produção.
 
 ---

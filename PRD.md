@@ -20,7 +20,7 @@ O perfil `@monroesheriffny` no X compartilha vídeos institucionais no Google Dr
 5. **Varredura no X:** Extrair posts e resolver `t.co` apontando para `drive.google.com/file/d/ID`.
 6. **Política de Testes:**
    - **Google Drive nos testes:** Usar links/IDs secundários descartáveis do Google Drive para validar o resolvedor. **Não usar o link oficial (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`) em testes de rotina** para não queimar a cota de download.
-   - **Player no Stremio:** Testar playback com Big Buck Bunny: `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`.
+   - **Player no Stremio:** Testar playback com o clipe curto do samplelib (5s): `https://samplelib.com/mp4/sample-5s.mp4`.
 
 ---
 
