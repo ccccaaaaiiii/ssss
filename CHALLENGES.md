@@ -31,7 +31,22 @@ Fluxo executado diretamente no backend serverless (Node.js / Cloudflare Worker):
 
 ---
 
-## DESAFIO 2 — Correção do ID do Google Drive de Teste
+## DESAFIO 2 — Cota de Download do Google Drive e Ambiente de Testes
+
+- **Problema:** O Google Drive impõe limites estritos de taxa e largura de banda para downloads de arquivos públicos (*"Download quota exceeded for this file"* / erro 403/429).
+- **Risco:** Realizar requisições automáticas e repetidas ao arquivo oficial de ~992 MB durante o desenvolvimento/testes travará o link de validação do usuário.
+- **Regra Obrigatória para Agentes e Desenvolvedores:**
+  - **NÃO usar o ID do MCSO 2018 para loops de testes ou requisições contínuas.**
+  - Usar dados mockados para testes unitários do resolvedor de links.
+  - Usar URLs de vídeos públicos abertos para testes de reprodução de mídia:
+    - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
+    - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4`
+    - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4`
+  - A validação com o link oficial deve ser feita apenas uma vez na checagem final.
+
+---
+
+## DESAFIO 3 — Correção do ID do Google Drive de Teste
 
 - **Problema:** A URL inicial possuía um erro de maiúscula/minúscula no ID (`1D8zEdsjKLe2zqSZYCjksy8ppfYMVkk3z`).
 - **Correção Confirmada:** O ID canônico extraído da postagem original do Twitter/X é:
@@ -39,7 +54,7 @@ Fluxo executado diretamente no backend serverless (Node.js / Cloudflare Worker):
 
 ---
 
-## DESAFIO 3 — Varredura do Perfil X (Twitter) sem Chaves de API
+## DESAFIO 4 — Varredura do Perfil X (Twitter) sem Chaves de API
 
 - **Objetivo:** Coletar postagens públicas do perfil `@monroesheriffny` sem exigir credenciais pagas ou tokens do usuário.
 - **Estratégia Serverless (JS Fetch):**
@@ -50,7 +65,7 @@ Fluxo executado diretamente no backend serverless (Node.js / Cloudflare Worker):
 
 ---
 
-## DESAFIO 4 — Catálogo e Metadados Dinâmicos no Stremio
+## DESAFIO 5 — Catálogo e Metadados Dinâmicos no Stremio
 
 - **Objetivo:** Disponibilizar os vídeos encontrados de forma limpa na interface do Stremio.
 - **Implementação:**
@@ -60,7 +75,7 @@ Fluxo executado diretamente no backend serverless (Node.js / Cloudflare Worker):
 
 ---
 
-## DESAFIO 5 — Empacotamento e Execução Serverless
+## DESAFIO 6 — Empacotamento e Execução Serverless
 
 - O código em cada branch de agente (`gem`, `son`, `grok`, etc.) deve ser 100% JavaScript (ou TS compilado) utilizando `stremio-addon-sdk` ou manipulação direta de rotas HTTP para Serverless/Edge.
 - O addon deve iniciar com `npm start` ou ser facilmente empacotável para deploy em Cloudflare Workers / Vercel.
