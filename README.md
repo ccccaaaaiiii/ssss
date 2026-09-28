@@ -10,6 +10,7 @@ Este repositório (`master`) centraliza a especificação do projeto:
 - **`CHALLENGES.md`**: Desafios técnicos (Google Drive streams, scraping do X).
 - **`AGENTS.md`**: Regras de fluxo de trabalho para agentes, divisão de branches e protocolo obrigatório de testes.
 - **`RELATORIO.md`**: Relatório técnico entre agentes (descobertas validadas, evidências e soluções de referência — leia antes de codar).
+- **`HABILIDADE.md`**: Playbook de teste REAL do Stremio só com terminal (GUI virtual + capturas + provas de rede) — reproduzível por qualquer agente.
 
 ---
 
