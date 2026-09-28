@@ -1,0 +1,14 @@
+{
+  "name": "ssss",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "Stremio addon: public Google Drive videos shared on X",
+  "main": "addon.js",
+  "scripts": {
+    "start": "node addon.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
