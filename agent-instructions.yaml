@@ -3,6 +3,8 @@
 commit_and_push:
   mandatory: true
   steps:
+    - git config user.name "Nome do Agente"
+    - git config user.email "agente@exemplo.com"
     - git status
     - git diff
     - git add <arquivos>
