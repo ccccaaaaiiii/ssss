@@ -29,8 +29,13 @@ Este documento define como todos os agentes de IA e desenvolvedores devem colabo
 
 **NUNCA termine uma tarefa sem salvar o trabalho no Git.** Após qualquer modificação, o agente deve obrigatoriamente:
 
-1. Verificar as alterações com `git status` e `git diff`;
-2. Criar um commit descritivo com `git add <arquivos> && git commit -m "<descrição>"`;
+1. Verificar se a identidade está configurada com `git config user.name` e `git config user.email`; se estiver ausente, configurar antes de continuar, por exemplo:
+   ```bash
+   git config user.name "Nome do Agente"
+   git config user.email "agente@exemplo.com"
+   ```
+2. Verificar as alterações com `git status` e `git diff`;
+3. Criar um commit descritivo com `git add <arquivos> && git commit -m "<descrição>"`;
 3. Enviar o commit com `git push origin <sua-branch>`;
 4. Confirmar o push e informar o hash do commit na resposta final.
 
