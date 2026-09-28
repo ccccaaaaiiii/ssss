@@ -1,5 +1,5 @@
 # PRD — ssss Stremio Addon (Serverless)
-**Versão:** 1.0 | **Branch referência:** master | **Alvo:** Serverless / Workers / Smart TVs
+**Versão:** 1.1 | **Branch referência:** master | **Alvo:** Serverless / Workers / Smart TVs
 
 ---
 
@@ -20,6 +20,7 @@ Perfis públicos no X (Twitter), como `@monroesheriffny`, compartilham vídeos i
 3. **Sem Credenciais / Chaves de API do Usuário:** O addon deve funcionar de forma autônoma sem exigir que o usuário final configure API keys do X ou do Google Drive.
 4. **Resolução de Streams do Google Drive:** O addon deve resolver o link de streaming contornando o aviso de vírus de arquivos grandes e servindo os headers corretos de vídeo (`video/mp4`, `Accept-Ranges: bytes`).
 5. **Varredura Dinâmica no X:** Extrair posts e links `t.co` que apontem para `drive.google.com/file/d/ID`.
+6. **Política de Testes Seguros (Anti-Rate Limit):** É expressamente proibido fazer testes de carga ou requisições repetidas ao link de referência do Google Drive (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`), sob pena de esgotamento de cota do Google. Os testes devem utilizar mocks, fixtures ou URLs de vídeo abertas.
 
 ### 2.2 Requisitos Não Obrigatórios (Desejáveis)
 - Suporte a cache de resoluções de streaming e catálogo em memória / KV / Edge.
@@ -75,7 +76,18 @@ Para arquivos grandes (ex: 992 MB), o Google Drive exige confirmação de downlo
 
 ---
 
-## 5. Especificação do Stremio Addon SDK
+## 5. Estratégia de Testes e Prevenção de Limite de Cota (Google Drive)
+
+Para evitar bloqueio de IP ou esgotamento de quota (*"Download quota exceeded for this file"*):
+- **Testes Unitários:** Usar dados mockados da resposta HTML do Drive e das timelines do X.
+- **Testes E2E de Player no Stremio:** Utilizar URLs de vídeo públicas de teste:
+  - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
+  - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4`
+- **Validação com o Google Drive Real:** Apenas 1 (uma) requisição pontual de validação final antes da entrega com o arquivo `NATURAL (MCSO 2018).mp4`.
+
+---
+
+## 6. Especificação do Stremio Addon SDK
 
 - **Resources:** `['catalog', 'meta', 'stream']`
 - **Types:** `['other', 'movie']`
@@ -84,7 +96,7 @@ Para arquivos grandes (ex: 992 MB), o Google Drive exige confirmação de downlo
 
 ---
 
-## 6. Critérios de Sucesso
+## 7. Critérios de Sucesso
 - Instalação no Stremio via URL HTTPS pública (sem rodar nada local).
 - O catálogo exibe o vídeo `NATURAL (MCSO 2018)`.
 - Ao clicar em reproduzir em uma Smart TV ou app Stremio, o vídeo toca fluidamente com seek funcional.
