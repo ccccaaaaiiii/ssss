@@ -1,6 +1,6 @@
-# ssss — Stremio Addon (Serverless)
+# ssss — Monroe Sheriff NY (MCSO) Stremio Addon
 
-Extensão do Stremio para localizar postagens no perfil X (Twitter) @monroesheriffny, extrair links públicos de vídeos no Google Drive e disponibilizá-los diretamente como catálogo e streaming no Stremio.
+Extensão do Stremio para localizar postagens no perfil X (Twitter) @monroesheriffny e reproduzir vídeos longos hospedados no Google Drive.
 
 ---
 
@@ -8,36 +8,38 @@ Extensão do Stremio para localizar postagens no perfil X (Twitter) @monroesheri
 Este repositório (`master`) centraliza a especificação do projeto:
 - **`PRD.md`**: Requisitos do produto, escopo e arquitetura serverless.
 - **`CHALLENGES.md`**: Desafios técnicos (Google Drive streams, scraping do X).
-- **`AGENTS.md`**: Regras de fluxo de trabalho para agentes, divisão de branches e políticas de teste.
+- **`AGENTS.md`**: Regras de fluxo de trabalho para agentes, divisão de branches e protocolo obrigatório de testes.
 
 ---
 
-## 2. Restrições e Premissas Fundamentais
+## 2. Como Rodar e Testar no Terminal (Headless)
 
-> ⚠️ **ARQUITETURA SERVERLESS & SUPORTE A SMART TVs:**
-> - **Zero Dependências Locais:** O addon **NÃO** pode depender de daemons locais, scripts em Python ou servidores em `localhost`.
-> - **Compatibilidade com Smart TVs:** Suporte direto a clientes Stremio em TVs e mobile sem terminais auxiliares.
-> - **100% Serverless / Cloud Ready:** Implementado em **JavaScript / TypeScript** para Cloudflare Workers / Vercel / Edge functions.
+### Instalação:
+```bash
+npm install
+```
+
+### Execução de Testes Automatizados (E2E):
+```bash
+npm test
+```
+*O teste valida automaticamente todas as rotas do Stremio e simula o player de vídeo através de requisições HTTP 206 Range.*
+
+### Iniciar o Servidor:
+```bash
+npm start
+```
+Acesse o manifesto em: `http://127.0.0.1:7000/manifest.json`
 
 ---
 
-## 3. Diretrizes de Testes
-
-> ⛔ **GOOGLE DRIVE ANTI-RATE LIMIT:**
-> - Não usar o arquivo de produção (`1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z`) em testes de rotina.
-> - **Resolvedor Google Drive (teste seguro):** Usar ID verificado `0ByeS4oOUV-49Zzh4R1J6R09zazQ` (Big Buck Bunny).
-> - **Player Stremio:** Usar stream direto `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`.
-> - Consulte **`AGENTS.md`** para diretrizes detalhadas.
-
----
-
-## 4. Fontes de Referência
+## 3. Fontes de Referência
 - **Perfil X:** [https://x.com/monroesheriffny](https://x.com/monroesheriffny)
 - **Postagem base:** [https://x.com/monroesheriffny/status/1078703782916227072](https://x.com/monroesheriffny/status/1078703782916227072)
 - **Arquivo oficial de entrega:** `NATURAL (MCSO 2018).mp4` (ID: `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` — ~992 MB)
 
 ---
 
-## 5. Estrutura de Branches
-- **`master`:** Documentação oficial (`README.md`, `PRD.md`, `CHALLENGES.md`, `AGENTS.md`).
+## 4. Estrutura de Branches
+- **`master`:** Documentação oficial e diretrizes (`README.md`, `PRD.md`, `CHALLENGES.md`, `AGENTS.md`, `package.json`).
 - **Branches de Implementação:** `gem37f`, `son46l`, `grokb46`, `kilo-agent`.
