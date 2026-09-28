@@ -1,0 +1,9 @@
+name = "ssss-mcso-drive"
+main = "worker.js"
+compatibility_date = "2026-09-01"
+
+# Variáveis de ambiente opcionais:
+# [vars]
+# PUBLIC_BASE_URL = "https://ssss-mcso-drive.<sua-conta>.workers.dev"
+# GDRIVE_ORIGIN = "https://drive.usercontent.google.com"   # sobrescreve em testes
+# SYNDICATION_ORIGIN = "https://syndication.twitter.com"   # sobrescreve em testes
