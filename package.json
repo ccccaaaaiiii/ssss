@@ -1,0 +1,13 @@
+{
+  "name": "ssss",
+  "version": "1.0.0",
+  "description": "Stremio Addon for Monroe Sheriff NY X profile videos via Google Drive",
+  "main": "addon.js",
+  "scripts": {
+    "start": "node addon.js",
+    "test": "node test/e2e.test.js"
+  },
+  "dependencies": {
+    "stremio-addon-sdk": "^1.1.1"
+  }
+}

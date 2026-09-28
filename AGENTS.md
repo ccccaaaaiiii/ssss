@@ -8,40 +8,52 @@ Este documento define como todos os agentes de IA e desenvolvedores devem colabo
 
 | Branch | Responsabilidade | O que aceita |
 |---|---|---|
-| **`master`** | **Fonte Canônica de Documentação** | `README.md`, `PRD.md`, `CHALLENGES.md`, `AGENTS.md`, `.gitignore` |
+| **`master`** | **Fonte Canônica de Documentação e Configurações Globais** | `README.md`, `PRD.md`, `CHALLENGES.md`, `AGENTS.md`, `package.json`, `.gitignore` |
 | **`gem37f`**, **`son46l`**, **`grokb46`**, **`kilo-agent`** | **Implementação de Código** | Código-fonte do Addon (JS/TS), manifests, rotas, testes da branch |
 
-### Regras Obrigatórias:
-1. **Atualizações de Documentação e Requisitos:**
+### Regras Obrigatórias para Agentes:
+1. **Leitura Prévia Obrigatória:**
+   - Ao iniciar qualquer conversa ou sessão limpa, o agente deve ler `AGENTS.md`, `PRD.md` e `CHALLENGES.md` para entender o contexto do projeto.
+2. **Atualizações de Documentação e Requisitos:**
    - Sempre que uma regra, especificação técnica ou requisito for alterado/adicionado, deve ser comitado e enviado para a branch **`master`**.
-2. **Desenvolvimento de Código:**
+3. **Desenvolvimento de Código:**
    - O código funcional, dependências e implementações do addon devem ser feitos exclusivamente na **branch de trabalho do respectivo agente** (ex: `gem37f`).
-3. **Sincronização:**
-   - As branches de implementação devem sempre fazer merge da `master` para manter o alinhamento com os requisitos canônicos.
-4. **Higiene do Repositório:**
+4. **Sincronização:**
+   - As branches de implementação devem sempre fazer merge da `master` para manter o alinhamento com os requisitos canônicos (`git pull origin master` / `git merge master`).
+5. **Higiene do Repositório:**
    - Nunca comitar `node_modules/`, logs temporários ou arquivos binários.
 
 ---
 
-## 2. Política de Testes e Prevenção de Rate Limit (Google Drive)
+## 2. Protocolo de Testes Automatizados no Terminal (Headless / Sem GUI)
 
-### ⛔ Proibição Estrita no Link de Produção
-- **Arquivo Oficial:** `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` (`NATURAL (MCSO 2018).mp4` — ~992 MB)
-- **Regra:** **NUNCA** executar loops de testes automatizados ou requisições repetidas contra este arquivo. O Google Drive bloqueia temporariamente o download quando a cota do arquivo é excedida (*"Download quota exceeded"*).
-- Este arquivo fica reservado exclusivamente para a **validação manual final de entrega**.
+Como agentes de IA operam exclusivamente em ambiente de terminal e não possuem interface gráfica (GUI) do Stremio ou navegador visual:
+
+### ⚡ Regra de Ouro da Validação Automática:
+**Todo agente DEVE rodar e garantir que o teste automatizado passe com 100% de sucesso antes de entregar qualquer resposta:**
+```bash
+npm test
+# ou
+node test/e2e.test.js
+```
+
+### 🔍 O que o teste automatizado valida:
+O script `test/e2e.test.js` simula ponta a ponta o ciclo de vida completo do Stremio:
+1. **Inicialização do Servidor:** Sobe o servidor HTTP do addon em porta local de teste.
+2. **Manifesto (`/manifest.json`):** Verifica se o manifesto é válido e cumpre a especificação do Stremio SDK.
+3. **Catálogo (`/catalog/:type/:id.json`):** Verifica se os itens de mídia são listados corretamente.
+4. **Metadados (`/meta/:type/:id.json`):** Valida títulos, sinopses e imagens dos itens.
+5. **Stream Endpoint (`/stream/:type/:id.json`):** Valida a geração da URL de streaming.
+6. **Simulação Real do Player de Vídeo (HTTP 206 Range Request):**
+   - O teste envia um cabeçalho `Range: bytes=0-1024` para a URL retornada (idêntico ao comportamento dos players ExoPlayer/VLC/Stremio).
+   - Valida se o servidor responde com **`HTTP 206 Partial Content`** e `Content-Type: video/mp4`.
+   - Isso **comprova matematicamente e funcionalmente** que o vídeo toca sem precisar abrir o app do Stremio.
 
 ---
 
-## 3. Links Oficiais para Testes e Desenvolvimento
+## 3. Política de Prevenção de Rate Limit (Google Drive)
 
-Para testes de desenvolvimento, utilize as referências públicas seguras e de reputação verificada:
-
-### A. Para testar o Resolvedor do Google Drive (Fluxo completo com token/uuid)
-- **Fonte Reputável / Open-Source (Blender Foundation / yt-dlp test suite):**
-  - **Arquivo:** `Big Buck Bunny.mp4` (177 MB — dispara página de confirmação de vírus e token uuid)
-  - **Google Drive ID:** `0ByeS4oOUV-49Zzh4R1J6R09zazQ`
-  - **URL Base:** `https://drive.google.com/file/d/0ByeS4oOUV-49Zzh4R1J6R09zazQ/view`
-
-### B. Para testar o Player de Vídeo no Stremio (Stream direto)
-- **Big Buck Bunny (Direct MP4):**
-  - `https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4`
+### ⛔ Cuidado com Quotas no Google Drive:
+- **Arquivo Oficial de Entrega:** `1D8zEdsjkLe2zqSZYCjksy8ppfYMVkk3z` (`NATURAL (MCSO 2018).mp4` — ~992 MB)
+- **Regra:** Não executar loops massivos ou requisições repetidas contínuas contra este arquivo para não estourar a cota de download.
+- Durante o desenvolvimento de novas features, caso queira testar fluxos repetitivos, utilize o ID de teste: `0ByeS4oOUV-49Zzh4R1J6R09zazQ` (Big Buck Bunny).
