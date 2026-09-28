@@ -25,6 +25,17 @@ Este documento define como todos os agentes de IA e desenvolvedores devem colabo
 
 ---
 
+## 🚨 REGRA CRÍTICA — COMMIT E PUSH OBRIGATÓRIOS
+
+**NUNCA termine uma tarefa sem salvar o trabalho no Git.** Após qualquer modificação, o agente deve obrigatoriamente:
+
+1. Verificar as alterações com `git status` e `git diff`;
+2. Criar um commit descritivo com `git add <arquivos> && git commit -m "<descrição>"`;
+3. Enviar o commit com `git push origin <sua-branch>`;
+4. Confirmar o push e informar o hash do commit na resposta final.
+
+A regra vale também para documentação, instruções, testes e configurações. Se o push falhar, relatar claramente o erro e não declarar a tarefa concluída. Cada agente deve trabalhar na própria branch (por exemplo, `GPT56l`) e nunca alterar `master` sem autorização.
+
 ## 2. Protocolo de Testes Automatizados no Terminal (Headless / Sem GUI)
 
 Como agentes de IA operam exclusivamente em ambiente de terminal e não possuem interface gráfica (GUI) do Stremio ou navegador visual:
